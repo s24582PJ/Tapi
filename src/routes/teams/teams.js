@@ -127,7 +127,10 @@ router.post('/teams/add', async (req, res) => {
 
         await saveTeamsToCSV(teams);
 
-        res.status(201).send(`Drużyna została dodana pomyślnie.`);
+        res.status(201).json({
+            message: 'Drużyna została dodana pomyślnie.',
+            addedTeam: newTeam
+        });
     } catch (error) {
         console.error('Błąd podczas dodawania drużyny:', error);
         res.status(500).send('Błąd przy dodawaniu drużyny.');
