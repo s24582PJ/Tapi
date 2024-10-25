@@ -83,7 +83,7 @@ router.get('/teams/:id', async (req, res) => {
     }
 });
 
-router.put('/teams/update/:id', async (req, res) => {
+router.put('/teams/:id', async (req, res) => {
     const teamId = req.params.id;
     const { owner } = req.body;
 
@@ -108,7 +108,7 @@ router.put('/teams/update/:id', async (req, res) => {
     }
 });
 
-router.post('/teams/add', async (req, res) => {
+router.post('/teams', async (req, res) => {
     const newTeam = req.body;
 
     if (!newTeam.TEAM_ID || !newTeam.LEAGUE_ID || !newTeam.CITY || !newTeam.NICKNAME) {
@@ -137,7 +137,7 @@ router.post('/teams/add', async (req, res) => {
     }
 });
 
-router.delete('/teams/delete/:id', async (req, res) => {
+router.delete('/teams/:id', async (req, res) => {
     const teamId = req.params.id;
 
     try {
@@ -160,7 +160,7 @@ router.delete('/teams/delete/:id', async (req, res) => {
     }
 });
 
-router.patch('/teams/update/:teamId', async (req, res) => {
+router.patch('/teams/:teamId', async (req, res) => {
     const teamId = req.params.teamId;
     const updates = req.body;
 

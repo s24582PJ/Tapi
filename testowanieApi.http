@@ -9,8 +9,8 @@ Content-Type: application/json
 GET {{baseUrl}}/teams?city=Atlanta
 Content-Type: application/json
 
-### Pobranie druzyn po 
-GET {{baseUrl}}/teams/1610612737
+### Pobranie druzyn po id
+GET {{baseUrl}}/teams/16106127377
 Content-Type: application/json
 
 ### Zmiana wlasciciela druzyny dla druzyny o danym id
@@ -18,5 +18,40 @@ PUT http://localhost:3000/api/teams/update/1610612737
 Content-Type: application/json
 
 {
-    "owner": "Tony Ressler zmieniony"
+    "owner": "Tony Ressler"
+}
+
+
+### Dodanie nowej drużyny
+POST {{baseUrl}}/teams/add
+Content-Type: application/json
+
+{
+    "LEAGUE_ID": "00",
+  "TEAM_ID": "16106127377",
+  "MIN_YEAR": "1949",
+  "MAX_YEAR": "2019",
+  "ABBREVIATION": "ATL",
+  "NICKNAME": "Hawks",
+  "YEARFOUNDED": "1949",
+  "CITY": "Atlanta",
+  "ARENA": "State Farm Arena",
+  "ARENACAPACITY": "18729",
+  "OWNER": "Tony Ressler",
+  "GENERALMANAGER": "Travis Schlenk",
+  "HEADCOACH": "Lloyd Pierce",
+  "DLEAGUEAFFILIATION": "Erie Bayhawks"
+}
+
+### Usunięcie drużyny
+DELETE {{baseUrl}}/teams/delete/16106127377
+Content-Type: application/jso
+
+### Patchowanie konkrentych pol
+PATCH {{baseUrl}}/teams/update/16106127377
+Content-Type: application/json
+
+{ 
+    "ARENA": "New Arena",
+    "HEADCOACH": "Lloyd Pierce Test"
 }

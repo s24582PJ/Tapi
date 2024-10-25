@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5efef5e1-7f4c-4eba-8d0e-efa34b20929c" name="Changes" comment="wreszcie dziala">
-      <change afterPath="$PROJECT_DIR$/src/app.js" afterDir="false" />
+    <list default="true" id="5efef5e1-7f4c-4eba-8d0e-efa34b20929c" name="Changes" comment="dodanie patcha">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/teams/teams.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/teams/teams.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/teams/teams.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testowanieApi.http" beforeDir="false" afterPath="$PROJECT_DIR$/testowanieApi.http" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +39,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "HTTP Request.testowanieApi | Pobranie wszystkich druzyn.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
@@ -48,6 +49,8 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "npm.dev.executor": "Run",
+    "npm.start.executor": "Run",
     "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2023.3.4\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
@@ -56,6 +59,38 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="Z:\s24582\Tapi\dane" />
     </key>
+  </component>
+  <component name="RunManager" selected="HTTP Request.testowanieApi | Pobranie wszystkich druzyn">
+    <configuration name="testowanieApi | Pobranie wszystkich druzyn" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/testowanieApi.http" requestIdentifier="Pobranie wszystkich druzyn" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.testowanieApi | Pobranie wszystkich druzyn" />
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.start" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -67,6 +102,7 @@
       <updated>1729240660076</updated>
       <workItem from="1729240661158" duration="284000" />
       <workItem from="1729241044159" duration="2352000" />
+      <workItem from="1729843811319" duration="4514000" />
     </task>
     <task id="LOCAL-00001" summary="zlaczenie projektu">
       <option name="closed" value="true" />
@@ -100,7 +136,31 @@
       <option name="project" value="LOCAL" />
       <updated>1729241137916</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="dodanie metod">
+      <option name="closed" value="true" />
+      <created>1729846880470</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729846880470</updated>
+    </task>
+    <task id="LOCAL-00006" summary="mala poprawka">
+      <option name="closed" value="true" />
+      <created>1729847191856</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1729847191856</updated>
+    </task>
+    <task id="LOCAL-00007" summary="dodanie patcha">
+      <option name="closed" value="true" />
+      <created>1729847778664</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1729847778664</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -122,6 +182,9 @@
     <MESSAGE value="cos tam dodanie bo git sie wylal" />
     <MESSAGE value=".gitignore" />
     <MESSAGE value="wreszcie dziala" />
-    <option name="LAST_COMMIT_MESSAGE" value="wreszcie dziala" />
+    <MESSAGE value="dodanie metod" />
+    <MESSAGE value="mala poprawka" />
+    <MESSAGE value="dodanie patcha" />
+    <option name="LAST_COMMIT_MESSAGE" value="dodanie patcha" />
   </component>
 </project>
