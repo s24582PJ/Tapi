@@ -160,4 +160,41 @@ router.delete('/teams/delete/:id', async (req, res) => {
     }
 });
 
+router.patch('/teams/update/:teamId', async (req, res) => {
+    const teamId = req.params.teamId;
+    const updates = req.body;
+
+    const forbiddenFields = ['TEAM_ID', 'MIN_YEAR', 'LEAGUE_ID'];
+    const hasForbiddenField = forbiddenFields.some(field => updates.hasOwnProperty(field));
+
+    if (hasForbiddenField) {
+        return res.status(400).send('Nie można zaktualizować pól: TEAM_ID, MIN_YEAR i LEAGUE_ID.');
+    }
+
+    if (!updates || Object.keys(updates).length === 0) {
+        return res.status(400).send('Nie podano żadnych pól do aktualizacji.');
+    }
+
+    try {
+        const teams = await loadTeamsFromCSV();
+
+        const teamIndex = teams.findIndex((team) => team.TEAM_ID === teamId);
+        if (teamIndex === -1) {
+            return res.status(404).send('Drużyna o podanym TEAM_ID nie istnieje.');
+        }
+
+        const updatedTeam = { ...teams[teamIndex], ...updates };
+        teams[teamIndex] = updatedTeam;
+
+        await saveTeamsToCSV(teams);
+
+        res.status(200).json({
+            message: 'Drużyna została zaktualizowana pomyślnie.',
+            updatedTeam: updatedTeam
+        });
+    } catch (error) {
+        console.error('Błąd podczas aktualizacji drużyny:', error);
+        res.status(500).send('Błąd przy aktualizacji drużyny.');
+    }
+});
 export default router;
