@@ -4,9 +4,12 @@ import { join, dirname } from 'path';
 import csv from 'csv-parser';
 import { fileURLToPath } from 'url';
 
+import {stringify} from "csv-stringify/sync";
+
 const __filename = fileURLToPath(import.meta.url);
 const router = express.Router();
 const __dirname = dirname(__filename);
+
 
 const csvFilePath = join(__dirname, '../../../dane', 'teams.csv');
 
@@ -25,6 +28,21 @@ const loadTeamsFromCSV = () => {
             .on('error', (error) => {
                 reject(error);
             });
+    });
+};
+
+const saveTeamsToCSV = (teams) => {
+    return new Promise((resolve, reject) => {
+        const csvData = stringify(teams, { header: true });
+        fs.writeFile(csvFilePath, csvData, (error) => {
+            if (error) {
+                console.error('Błąd przy zapisie CSV:', error);
+                reject(error);
+            } else {
+                console.log('Zapisano dane do CSV');
+                resolve();
+            }
+        });
     });
 };
 
@@ -62,6 +80,80 @@ router.get('/teams/:id', async (req, res) => {
         }
     } catch (error) {
         res.status(500).send('Błąd przy wczytywaniu danych z pliku CSV');
+    }
+});
+
+router.put('/teams/update/:id', async (req, res) => {
+    const teamId = req.params.id;
+    const { owner } = req.body;
+
+    if (!owner) {
+        return res.status(400).send('Pole "owner" jest wymagane');
+    }
+
+    try {
+        const teams = await loadTeamsFromCSV();
+
+        const teamIndex = teams.findIndex(t => t.TEAM_ID === teamId);
+
+        if (teamIndex !== -1) {
+            teams[teamIndex].OWNER = owner;
+            await saveTeamsToCSV(teams);
+            res.json(teams[teamIndex]);
+        } else {
+            res.status(404).send(`Drużyna o TEAM_ID ${teamId} nie została znaleziona`);
+        }
+    } catch (error) {
+        res.status(500).send('Błąd przy aktualizacji właściciela drużyny');
+    }
+});
+
+router.post('/teams/add', async (req, res) => {
+    const newTeam = req.body;
+
+    if (!newTeam.TEAM_ID || !newTeam.LEAGUE_ID || !newTeam.CITY || !newTeam.NICKNAME) {
+        return res.status(400).send('Brakuje wymaganego pola: TEAM_ID, LEAGUE_ID, CITY lub NICKNAME.');
+    }
+
+    try {
+        const teams = await loadTeamsFromCSV();
+
+        const existingTeam = teams.find((team) => team.TEAM_ID === newTeam.TEAM_ID);
+        if (existingTeam) {
+            return res.status(400).send('Drużyna o podanym TEAM_ID już istnieje.');
+        }
+
+        teams.push(newTeam);
+
+        await saveTeamsToCSV(teams);
+
+        res.status(201).send(`Drużyna została dodana pomyślnie.`);
+    } catch (error) {
+        console.error('Błąd podczas dodawania drużyny:', error);
+        res.status(500).send('Błąd przy dodawaniu drużyny.');
+    }
+});
+
+router.delete('/teams/delete/:id', async (req, res) => {
+    const teamId = req.params.id;
+
+    try {
+        const teams = await loadTeamsFromCSV();
+
+        const teamIndex = teams.findIndex((team) => team.TEAM_ID === teamId);
+
+        if (teamIndex === -1) {
+            return res.status(404).send(`Drużyna o TEAM_ID ${teamId} nie została znaleziona`);
+        }
+
+        teams.splice(teamIndex, 1);
+
+        await saveTeamsToCSV(teams);
+
+        res.status(200).send(`Drużyna o TEAM_ID ${teamId} została usunięta.`);
+    } catch (error) {
+        console.error('Błąd podczas usuwania drużyny:', error);
+        res.status(500).send('Błąd przy usuwaniu drużyny.');
     }
 });
 

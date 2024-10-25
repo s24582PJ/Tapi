@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:3000/api
+
+
+### Pobranie wszystkich druzyn
+GET {{baseUrl}}/teams
+Content-Type: application/json
+
+### Pobranie druzyn po nazwie miasta
+GET {{baseUrl}}/teams?city=Atlanta
+Content-Type: application/json
+
+### Pobranie druzyn po 
+GET {{baseUrl}}/teams/1610612737
+Content-Type: application/json
+
+### Zmiana wlasciciela druzyny dla druzyny o danym id
+PUT http://localhost:3000/api/teams/update/1610612737
+Content-Type: application/json
+
+{
+    "owner": "Tony Ressler zmieniony"
+}
