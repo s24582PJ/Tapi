@@ -1,8 +1,8 @@
 import express from 'express';
 import fs from 'fs';
-import { join, dirname } from 'path';
+import {join, dirname} from 'path';
 import csv from 'csv-parser';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 
 import {stringify} from "csv-stringify/sync";
 
@@ -33,7 +33,7 @@ const loadTeamsFromCSV = () => {
 
 const saveTeamsToCSV = (teams) => {
     return new Promise((resolve, reject) => {
-        const csvData = stringify(teams, { header: true });
+        const csvData = stringify(teams, {header: true});
         fs.writeFile(csvFilePath, csvData, (error) => {
             if (error) {
                 console.error('Błąd przy zapisie CSV:', error);
@@ -49,19 +49,30 @@ const saveTeamsToCSV = (teams) => {
 router.get('/teams', async (req, res) => {
     try {
         const teams = await loadTeamsFromCSV();
+        const city = req.query.city?.toLowerCase();
 
-        if (req.query.city) {
-            const city = req.query.city.toLowerCase();
-            const filteredTeams = teams.filter(t => t.CITY.toLowerCase() === city);
+        const filteredTeams = city ? teams.filter(t => t.CITY.toLowerCase() === city) : teams;
 
-            if (filteredTeams.length > 0) {
-                return res.json(filteredTeams);
-            } else {
-                return res.status(404).send(`Nie znaleziono drużyn w mieście: ${city}`);
-            }
+        if (city && filteredTeams.length === 0) {
+            return res.status(404).set({
+                'Operation-Status': 'Failed',
+                'Resource-Status': 'Not Found',
+                'Request-Type': 'GET',
+            }).send(`Nie znaleziono drużyn w mieście: ${city}`);
         }
 
-        res.json(teams);
+        res.set({
+            'Operation-Status': 'Success',
+            'Resource-Status': 'Retrieved',
+            'Request-Type': 'GET',
+        }).status(200).json({
+            teams: filteredTeams,
+            _links: {
+                self: {href: '/api/teams', method: 'GET'},
+                add: {href: '/api/teams/add', method: 'POST'},
+                delete: {href: `/api/teams/delete/{id}`, method: 'DELETE'}
+            }
+        });
     } catch (error) {
         res.status(500).send('Błąd przy wczytywaniu danych z pliku CSV');
     }
@@ -69,23 +80,39 @@ router.get('/teams', async (req, res) => {
 
 router.get('/teams/:id', async (req, res) => {
     const teamId = req.params.id;
+
     try {
         const teams = await loadTeamsFromCSV();
         const team = teams.find(t => t.TEAM_ID === teamId);
 
-        if (team) {
-            res.json(team);
-        } else {
-            res.status(404).send(`Drużyna o TEAM_ID ${teamId} nie została znaleziona`);
+        if (!team) {
+            return res.status(404).set({
+                'Operation-Status': 'Failed',
+                'Resource-Status': 'Not Found',
+                'Request-Type': 'GET'
+            }).send('Drużyna o podanym TEAM_ID nie została znaleziona.');
         }
+
+        res.set({
+            'Operation-Status': 'Success',
+            'Resource-Status': 'Retrieved',
+            'Request-Type': 'GET',
+        }).status(200).json({
+            team,
+            _links: {
+                self: {href: `/api/teams/${teamId}`, method: 'GET'},
+                update: {href: `/api/teams/update/${teamId}`, method: 'PUT'},
+                delete: {href: `/api/teams/delete/${teamId}`, method: 'DELETE'}
+            }
+        });
     } catch (error) {
-        res.status(500).send('Błąd przy wczytywaniu danych z pliku CSV');
+        res.status(500).send('Błąd podczas wczytywania drużyny.');
     }
 });
 
 router.put('/teams/:id', async (req, res) => {
     const teamId = req.params.id;
-    const { owner } = req.body;
+    const {owner} = req.body;
 
     if (!owner) {
         return res.status(400).send('Pole "owner" jest wymagane');
@@ -93,22 +120,37 @@ router.put('/teams/:id', async (req, res) => {
 
     try {
         const teams = await loadTeamsFromCSV();
-
         const teamIndex = teams.findIndex(t => t.TEAM_ID === teamId);
 
-        if (teamIndex !== -1) {
-            teams[teamIndex].OWNER = owner;
-            await saveTeamsToCSV(teams);
-            res.json(teams[teamIndex]);
-        } else {
-            res.status(404).send(`Drużyna o TEAM_ID ${teamId} nie została znaleziona`);
+        if (teamIndex === -1) {
+            return res.status(404).set({
+                'Operation-Status': 'Failed',
+                'Resource-Status': 'Not Found',
+                'Request-Type': 'PUT'
+            }).send(`Drużyna o TEAM_ID ${teamId} nie została znaleziona`);
         }
+
+        teams[teamIndex].OWNER = owner;
+        await saveTeamsToCSV(teams);
+
+        res.set({
+            'Operation-Status': 'Success',
+            'Resource-Status': 'Updated',
+            'Request-Type': 'PUT',
+        }).status(200).json({
+            updatedTeam: teams[teamIndex],
+            _links: {
+                self: {href: `/api/teams/${teamId}`, method: 'GET'},
+                update: {href: `/api/teams/update/${teamId}`, method: 'PUT'},
+                allTeams: {href: '/api/teams', method: 'GET'}
+            }
+        });
     } catch (error) {
         res.status(500).send('Błąd przy aktualizacji właściciela drużyny');
     }
 });
 
-router.post('/teams', async (req, res) => {
+router.post('/teams/add', async (req, res) => {
     const newTeam = req.body;
 
     if (!newTeam.TEAM_ID || !newTeam.LEAGUE_ID || !newTeam.CITY || !newTeam.NICKNAME) {
@@ -117,45 +159,61 @@ router.post('/teams', async (req, res) => {
 
     try {
         const teams = await loadTeamsFromCSV();
+        const existingTeam = teams.find(team => team.TEAM_ID === newTeam.TEAM_ID);
 
-        const existingTeam = teams.find((team) => team.TEAM_ID === newTeam.TEAM_ID);
         if (existingTeam) {
             return res.status(400).send('Drużyna o podanym TEAM_ID już istnieje.');
         }
 
         teams.push(newTeam);
-
         await saveTeamsToCSV(teams);
 
-        res.status(201).json({
+        res.set({
+            'Operation-Status': 'Success',
+            'Resource-Status': 'Created',
+            'Request-Type': 'POST',
+        }).status(201).json({
             message: 'Drużyna została dodana pomyślnie.',
-            addedTeam: newTeam
+            _links: {
+                self: {href: `/api/teams/${newTeam.TEAM_ID}`, method: 'GET'},
+                allTeams: {href: '/api/teams', method: 'GET'}
+            }
         });
     } catch (error) {
-        console.error('Błąd podczas dodawania drużyny:', error);
         res.status(500).send('Błąd przy dodawaniu drużyny.');
     }
 });
 
-router.delete('/teams/:id', async (req, res) => {
+router.delete('/teams/delete/:id', async (req, res) => {
     const teamId = req.params.id;
 
     try {
         const teams = await loadTeamsFromCSV();
-
-        const teamIndex = teams.findIndex((team) => team.TEAM_ID === teamId);
+        const teamIndex = teams.findIndex(team => team.TEAM_ID === teamId);
 
         if (teamIndex === -1) {
-            return res.status(404).send(`Drużyna o TEAM_ID ${teamId} nie została znaleziona`);
+            return res.status(404).set({
+                'Operation-Status': 'Failed',
+                'Resource-Status': 'Not Found',
+                'Request-Type': 'DELETE'
+            }).send(`Drużyna o TEAM_ID ${teamId} nie została znaleziona`);
         }
 
         teams.splice(teamIndex, 1);
-
         await saveTeamsToCSV(teams);
 
-        res.status(200).send(`Drużyna o TEAM_ID ${teamId} została usunięta.`);
+        res.set({
+            'Operation-Status': 'Success',
+            'Resource-Status': 'Deleted',
+            'Request-Type': 'DELETE',
+        }).status(200).json({
+            message: `Drużyna o TEAM_ID ${teamId} została usunięta.`,
+            _links: {
+                allTeams: {href: '/api/teams', method: 'GET'},
+                addTeam: {href: '/api/teams/add', method: 'POST'}
+            }
+        });
     } catch (error) {
-        console.error('Błąd podczas usuwania drużyny:', error);
         res.status(500).send('Błąd przy usuwaniu drużyny.');
     }
 });
@@ -168,33 +226,58 @@ router.patch('/teams/:teamId', async (req, res) => {
     const hasForbiddenField = forbiddenFields.some(field => updates.hasOwnProperty(field));
 
     if (hasForbiddenField) {
-        return res.status(400).send('Nie można zaktualizować pól: TEAM_ID, MIN_YEAR i LEAGUE_ID.');
+        return res.status(400).set({
+            'Operation-Status': 'Failed',
+            'Resource-Status': 'Not Updated',
+            'Request-Type': 'PATCH'
+        }).send('Nie można zaktualizować pól: TEAM_ID, MIN_YEAR i LEAGUE_ID.');
     }
 
     if (!updates || Object.keys(updates).length === 0) {
-        return res.status(400).send('Nie podano żadnych pól do aktualizacji.');
+        return res.status(400).set({
+            'Operation-Status': 'Failed',
+            'Resource-Status': 'Not Updated',
+            'Request-Type': 'PATCH'
+        }).send('Nie podano żadnych pól do aktualizacji.');
     }
 
     try {
         const teams = await loadTeamsFromCSV();
+        const teamIndex = teams.findIndex(team => team.TEAM_ID === teamId);
 
-        const teamIndex = teams.findIndex((team) => team.TEAM_ID === teamId);
         if (teamIndex === -1) {
-            return res.status(404).send('Drużyna o podanym TEAM_ID nie istnieje.');
+            return res.status(404).set({
+                'Operation-Status': 'Failed',
+                'Resource-Status': 'Not Found',
+                'Request-Type': 'PATCH'
+            }).send('Drużyna o podanym TEAM_ID nie istnieje.');
         }
 
-        const updatedTeam = { ...teams[teamIndex], ...updates };
+        const updatedTeam = {...teams[teamIndex], ...updates};
         teams[teamIndex] = updatedTeam;
 
         await saveTeamsToCSV(teams);
 
-        res.status(200).json({
+        res.set({
+            'Operation-Status': 'Success',
+            'Resource-Status': 'Updated',
+            'Request-Type': 'PATCH'
+        }).status(200).json({
             message: 'Drużyna została zaktualizowana pomyślnie.',
-            updatedTeam: updatedTeam
+            updatedTeam: updatedTeam,
+            _links: {
+                self: {href: `/api/teams/${teamId}`, method: 'GET'},
+                allTeams: {href: '/api/teams', method: 'GET'},
+                delete: {href: `/api/teams/delete/${teamId}`, method: 'DELETE'}
+            }
         });
     } catch (error) {
         console.error('Błąd podczas aktualizacji drużyny:', error);
-        res.status(500).send('Błąd przy aktualizacji drużyny.');
+        res.status(500).set({
+            'Operation-Status': 'Failed',
+            'Resource-Status': 'Error',
+            'Request-Type': 'PATCH'
+        }).send('Błąd przy aktualizacji drużyny.');
     }
 });
 export default router;
