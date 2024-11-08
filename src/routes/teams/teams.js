@@ -184,7 +184,7 @@ router.post('/teams/add', async (req, res) => {
     }
 });
 
-router.delete('/teams/delete/:id', async (req, res) => {
+router.delete('/teams/:id', async (req, res) => {
     const teamId = req.params.id;
 
     try {

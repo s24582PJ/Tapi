@@ -48,10 +48,139 @@ DELETE {{baseUrl}}/teams/delete/16106127377
 Content-Type: application/jso
 
 ### Patchowanie konkrentych pol
-PATCH {{baseUrl}}/teams/update/16106127377
+PATCH {{baseUrl}}/teams/16106127377
 Content-Type: application/json
 
 { 
     "ARENA": "New Arena",
     "HEADCOACH": "Lloyd Pierce Test"
 }
+
+### Pobranie wszystkich graczy
+GET {{baseUrl}}/players
+Content-Type: application/json
+
+### Pobranie gracza po ID
+GET {{baseUrl}}/players/1234567891
+Content-Type: application/json
+
+### Pobranie graczy po TEAM_ID
+GET {{baseUrl}}/players?team_id=1610612762
+Content-Type: application/json
+
+### Dodanie nowego gracza
+POST {{baseUrl}}/players/add
+Content-Type: application/json
+
+{
+    "PLAYER_NAME": "Johny Bravo",
+    "TEAM_ID": "1610612737",
+    "PLAYER_ID": "1234567891",
+    "SEASON": "2024"
+}
+
+### Częściowa aktualizacja gracza
+PATCH {{baseUrl}}/players/update/1234567891
+Content-Type: application/json
+
+{
+    "PLAYER_NAME": "John Doe Updated"
+}
+
+### Pełna aktualizacja gracza
+PUT {{baseUrl}}/players/update/1234567891
+Content-Type: application/json
+
+{
+    "PLAYER_NAME": "John Doe Updated Full",
+    "TEAM_ID": "1610612738",
+    "PLAYER_ID": "123456789",
+    "SEASON": "2024-2025"
+}
+
+### Usunięcie gracza
+DELETE {{baseUrl}}/players/delete/1234567891
+Content-Type: application/json
+
+@baseUrl = http://localhost:3000/api
+
+### Pobranie wszystkich meczów
+GET {{baseUrl}}/games
+Content-Type: application/json
+
+### Pobranie meczu po GAME_ID
+GET {{baseUrl}}/games/22200500
+Content-Type: application/json
+
+### Dodanie nowego meczu
+POST {{baseUrl}}/games/add
+Content-Type: application/json
+
+{
+    "GAME_DATE_EST": "2023-10-10",
+    "GAME_ID": "22200500",
+    "GAME_STATUS_TEXT": "Final",
+    "HOME_TEAM_ID": "1610612740",
+    "VISITOR_TEAM_ID": "1610612759",
+    "SEASON": "2023",
+    "TEAM_ID_home": "1610612740",
+    "PTS_home": "120",
+    "FG_PCT_home": "0.485",
+    "FT_PCT_home": "0.900",
+    "FG3_PCT_home": "0.385",
+    "AST_home": "30",
+    "REB_home": "45",
+    "TEAM_ID_away": "1610612759",
+    "PTS_away": "110",
+    "FG_PCT_away": "0.470",
+    "FT_PCT_away": "0.850",
+    "FG3_PCT_away": "0.370",
+    "AST_away": "28",
+    "REB_away": "40",
+    "HOME_TEAM_WINS": "1"
+}
+
+### Aktualizacja danych meczu (częściowa)
+PATCH {{baseUrl}}/games/update/22200500
+Content-Type: application/json
+
+{
+    "PTS_home": "130",
+    "PTS_away": "115"
+}
+
+### Pełna aktualizacja meczu
+PUT {{baseUrl}}/games/update/22200500
+Content-Type: application/json
+
+{
+    "GAME_DATE_EST": "2023-10-10",
+    "GAME_ID": "22200477",
+    "GAME_STATUS_TEXT": "Final",
+    "HOME_TEAM_ID": "1610612740",
+    "VISITOR_TEAM_ID": "1610612759",
+    "SEASON": "2023",
+    "TEAM_ID_home": "1610612740",
+    "PTS_home": "125",
+    "FG_PCT_home": "0.490",
+    "FT_PCT_home": "0.910",
+    "FG3_PCT_home": "0.390",
+    "AST_home": "35",
+    "REB_home": "48",
+    "TEAM_ID_away": "1610612759",
+    "PTS_away": "120",
+    "FG_PCT_away": "0.465",
+    "FT_PCT_away": "0.855",
+    "FG3_PCT_away": "0.375",
+    "AST_away": "27",
+    "REB_away": "42",
+    "HOME_TEAM_WINS": "1"
+}
+
+### Usunięcie meczu
+DELETE {{baseUrl}}/games/delete/22200500
+Content-Type: application/json
+
+### zagniezdzenie
+GET {{baseUrl}}/games/details/22200500
+Content-Type: application/json
