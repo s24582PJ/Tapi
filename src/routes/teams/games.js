@@ -239,59 +239,7 @@ router.delete('/games/delete/:id', async (req, res) => {
     }
 });
 
-router.get('/games/details/:id', async (req, res) => {
-    res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('X-Powered-By', 'Express');
-    res.setHeader('Content-Type', 'application/json');
 
-    const gameId = req.params.id;
-
-    try {
-        const games = await loadGamesFromCSV();
-        const game = games.find(g => g.GAME_ID === gameId);
-
-        if (!game) {
-            return res.status(404).send('Mecz o podanym GAME_ID nie został znaleziony.');
-        }
-
-        const homeTeamId = game.HOME_TEAM_ID;
-        const visitorTeamId = game.VISITOR_TEAM_ID;
-
-        const homeTeam = await loadTeamDetails(homeTeamId); 
-        const visitorTeam = await loadTeamDetails(visitorTeamId);
-
-        if (!homeTeam || !visitorTeam) {
-            return res.status(404).send('Jedna z drużyn o podanym ID nie została znaleziona.');
-        }
-
-        res.status(200).json({
-            game,
-            homeTeam,
-            visitorTeam,
-            _links: {
-                self: { href: `/api/games/details/${gameId}`, method: 'GET' },
-                update: { href: `/api/games/update/${gameId}`, method: 'PATCH' },
-                delete: { href: `/api/games/delete/${gameId}`, method: 'DELETE' },
-                allGames: { href: '/api/games', method: 'GET' },
-                homeTeam: { href: `/api/teams/${homeTeamId}`, method: 'GET' },
-                visitorTeam: { href: `/api/teams/${visitorTeamId}`, method: 'GET' }
-            }
-        });
-    } catch (error) {
-        console.error('Błąd podczas wczytywania meczu:', error);
-        res.status(500).send('Błąd podczas wczytywania meczu.');
-    }
-});
-
-async function loadTeamDetails(teamId) {
-    try {
-        const teams = await loadTeamsFromCSV();
-        return teams.find(t => t.TEAM_ID === teamId);
-    } catch (error) {
-        console.error('Błąd podczas wczytywania drużyn:', error);
-        return null;
-    }
-}
 
 
 export default router;

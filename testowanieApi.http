@@ -181,6 +181,3 @@ Content-Type: application/json
 DELETE {{baseUrl}}/games/delete/22200500
 Content-Type: application/json
 
-### zagniezdzenie
-GET {{baseUrl}}/games/details/22200500
-Content-Type: application/json
