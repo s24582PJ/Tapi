@@ -85,10 +85,10 @@ router.get('/players/:id', async (req, res) => {
         res.status(200).json({
             player,
             _links: {
-                self: { href: `/api/players/${playerId}`, method: 'GET' },
-                update: { href: `/api/players/update/${playerId}`, method: 'PATCH' },
-                delete: { href: `/api/players/delete/${playerId}`, method: 'DELETE' },
-                allPlayers: { href: '/api/players', method: 'GET' }
+                self: { href: `http://localhost:3000/api/players/${playerId}`, method: 'GET' },
+                update: { href: `http://localhost:3000/api/players/update/${playerId}`, method: 'PATCH' },
+                delete: { href: `http://localhost:3000/api/players/delete/${playerId}`, method: 'DELETE' },
+                allPlayers: { href: 'http://localhost:3000/api/players', method: 'GET' }
             }
         });
     } catch (error) {
@@ -122,8 +122,8 @@ router.post('/players/add', async (req, res) => {
         res.status(201).json({
             message: 'Gracz został dodany pomyślnie.',
             _links: {
-                self: { href: `/api/players/${newPlayer.PLAYER_ID}`, method: 'GET' },
-                allPlayers: { href: '/api/players', method: 'GET' }
+                self: { href: `http://localhost:3000/api/players/${newPlayer.PLAYER_ID}`, method: 'GET' },
+                allPlayers: { href: 'http://localhost:3000/api/players', method: 'GET' }
             }
         });
     } catch (error) {
@@ -157,8 +157,8 @@ router.patch('/players/update/:id', async (req, res) => {
             message: 'Gracz został zaktualizowany pomyślnie.',
             updatedPlayer: updatedPlayer,
             _links: {
-                self: { href: `/api/players/${playerId}`, method: 'GET' },
-                allPlayers: { href: '/api/players', method: 'GET' }
+                self: { href: `http://localhost:3000/api/players/${playerId}`, method: 'GET' },
+                allPlayers: { href: 'http://localhost:3000/api/players', method: 'GET' }
             }
         });
     } catch (error) {
@@ -191,8 +191,8 @@ router.put('/players/update/:id', async (req, res) => {
             message: 'Gracz został w pełni zaktualizowany pomyślnie.',
             updatedPlayer: players[playerIndex],
             _links: {
-                self: { href: `/api/players/${playerId}`, method: 'GET' },
-                allPlayers: { href: '/api/players', method: 'GET' }
+                self: { href: `http://localhost:3000/api/players/${playerId}`, method: 'GET' },
+                allPlayers: { href: 'http://localhost:3000/api/players', method: 'GET' }
             }
         });
     } catch (error) {
@@ -229,8 +229,8 @@ router.put('/players/update/:id', async (req, res) => {
             'Request-Type': 'DELETE',}).status(200).json({
             message: `Gracz o PLAYER_ID ${playerId} został usunięty.`,
             _links: {
-                allPlayers: { href: '/api/players', method: 'GET' },
-                addPlayer: { href: '/api/players/add', method: 'POST' }
+                allPlayers: { href: 'http://localhost:3000/api/players', method: 'GET' },
+                addPlayer: { href: 'http://localhost:3000/api/players/add', method: 'POST' }
             }
         });
     } catch (error) {

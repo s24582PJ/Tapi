@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5efef5e1-7f4c-4eba-8d0e-efa34b20929c" name="Changes" comment="dodanie patcha">
-      <change afterPath="$PROJECT_DIR$/src/routes/teams/players.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dane/players.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dane/players.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dane/teams.csv" beforeDir="false" afterPath="$PROJECT_DIR$/dane/teams.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/teams/teams.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/teams/teams.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,7 +39,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "E:/srapi/Tapi",
+    "last_opened_file_path": "Z:/s24582/Tapi",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -93,13 +88,6 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-WS-242.23726.96" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -112,6 +100,7 @@
       <workItem from="1729241044159" duration="2352000" />
       <workItem from="1729843811319" duration="4514000" />
       <workItem from="1729949655297" duration="2344000" />
+      <workItem from="1731060801742" duration="63000" />
     </task>
     <task id="LOCAL-00001" summary="zlaczenie projektu">
       <option name="closed" value="true" />

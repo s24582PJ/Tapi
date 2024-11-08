@@ -68,9 +68,9 @@ router.get('/teams', async (req, res) => {
         }).status(200).json({
             teams: filteredTeams,
             _links: {
-                self: {href: '/api/teams', method: 'GET'},
-                add: {href: '/api/teams/add', method: 'POST'},
-                delete: {href: `/api/teams/delete/{id}`, method: 'DELETE'}
+                self: {href: 'http://localhost:3000/api/teams', method: 'GET'},
+                add: {href: 'http://localhost:3000/api/teams/add', method: 'POST'},
+                delete: {href: `http://localhost:3000/api/teams/delete/{id}`, method: 'DELETE'}
             }
         });
     } catch (error) {
@@ -100,9 +100,9 @@ router.get('/teams/:id', async (req, res) => {
         }).status(200).json({
             team,
             _links: {
-                self: {href: `/api/teams/${teamId}`, method: 'GET'},
-                update: {href: `/api/teams/update/${teamId}`, method: 'PUT'},
-                delete: {href: `/api/teams/delete/${teamId}`, method: 'DELETE'}
+                self: {href: `http://localhost:3000/api/teams/${teamId}`, method: 'GET'},
+                update: {href: `http://localhost:3000/api/teams/update/${teamId}`, method: 'PUT'},
+                delete: {href: `http://localhost:3000/api/teams/delete/${teamId}`, method: 'DELETE'}
             }
         });
     } catch (error) {
@@ -140,9 +140,9 @@ router.put('/teams/:id', async (req, res) => {
         }).status(200).json({
             updatedTeam: teams[teamIndex],
             _links: {
-                self: {href: `/api/teams/${teamId}`, method: 'GET'},
-                update: {href: `/api/teams/update/${teamId}`, method: 'PUT'},
-                allTeams: {href: '/api/teams', method: 'GET'}
+                self: {href: `http://localhost:3000/api/teams/${teamId}`, method: 'GET'},
+                update: {href: `http://localhost:3000/api/teams/update/${teamId}`, method: 'PUT'},
+                allTeams: {href: 'http://localhost:3000/api/teams', method: 'GET'}
             }
         });
     } catch (error) {
@@ -175,8 +175,8 @@ router.post('/teams/add', async (req, res) => {
         }).status(201).json({
             message: 'Drużyna została dodana pomyślnie.',
             _links: {
-                self: {href: `/api/teams/${newTeam.TEAM_ID}`, method: 'GET'},
-                allTeams: {href: '/api/teams', method: 'GET'}
+                self: {href: `http://localhost:3000/api/teams/${newTeam.TEAM_ID}`, method: 'GET'},
+                allTeams: {href: 'http://localhost:3000/api/teams', method: 'GET'}
             }
         });
     } catch (error) {
@@ -209,8 +209,8 @@ router.delete('/teams/:id', async (req, res) => {
         }).status(200).json({
             message: `Drużyna o TEAM_ID ${teamId} została usunięta.`,
             _links: {
-                allTeams: {href: '/api/teams', method: 'GET'},
-                addTeam: {href: '/api/teams/add', method: 'POST'}
+                allTeams: {href: 'http://localhost:3000/api/teams', method: 'GET'},
+                addTeam: {href: 'http://localhost:3000/api/teams/add', method: 'POST'}
             }
         });
     } catch (error) {
@@ -266,9 +266,9 @@ router.patch('/teams/:teamId', async (req, res) => {
             message: 'Drużyna została zaktualizowana pomyślnie.',
             updatedTeam: updatedTeam,
             _links: {
-                self: {href: `/api/teams/${teamId}`, method: 'GET'},
-                allTeams: {href: '/api/teams', method: 'GET'},
-                delete: {href: `/api/teams/delete/${teamId}`, method: 'DELETE'}
+                self: {href: `http://localhost:3000/api/teams/${teamId}`, method: 'GET'},
+                allTeams: {href: 'http://localhost:3000/api/teams', method: 'GET'},
+                delete: {href: `http://localhost:3000/api/teams/delete/${teamId}`, method: 'DELETE'}
             }
         });
     } catch (error) {
