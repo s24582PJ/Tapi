@@ -1,0 +1,27 @@
+{
+    "name": "tapitapi",
+    "version": "1.0.0",
+  
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node src/grpc/serverProto.js",
+      "dev": "nodemon src/grpc/serverProto.js"
+    },
+    "keywords": [],
+    "type": "module",
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+      "@grpc/grpc-js": "^1.12.2",
+      "@grpc/proto-loader": "^0.7.13",
+      "csv-parser": "^3.0.0",
+      "csv-stringify": "^6.5.1",
+      "express": "^4.21.1"
+    },
+    "devDependencies": {
+      "cross-env": "^7.0.3",
+      "nodemon": "^3.1.7"
+    }
+  }
+  
