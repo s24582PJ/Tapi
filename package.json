@@ -17,7 +17,9 @@
     "@grpc/proto-loader": "^0.7.13",
     "csv-parser": "^3.0.0",
     "csv-stringify": "^6.5.1",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^16.10.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

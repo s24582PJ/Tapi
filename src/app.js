@@ -1,5 +1,7 @@
 import express from "express";
 import cors from 'cors';
+import { graphqlHTTP } from 'express-graphql';
+import schema from './graphql/schema.js'; 
 
 import teamRoutes from "./routes/teams/teams.js";
 import players from "./routes/teams/players.js";
@@ -8,7 +10,6 @@ import games from "./routes/teams/games.js";
 const app = express();
 
 app.use(express.json());
-
 
 const allowedOrigins = ['http://localhost:3000']; 
 app.use(cors({
@@ -22,6 +23,11 @@ app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store');
     next();
 });
+
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    graphiql: true 
+}));
 
 app.use('/api/', teamRoutes, players, games);
 
