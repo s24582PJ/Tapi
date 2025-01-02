@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package nba;
+
+// Typy dla drużyn
+message Team {
+    string team_id = 1;
+    string nickname = 2;
+    string city = 3;
+    string arena = 4;
+    string owner = 5;
+}
+
+message TeamInput {
+    string team_id = 1;
+    string nickname = 2;
+    string city = 3;
+    string arena = 4;
+    string owner = 5;
+}
+
+message TeamFilter {
+    string team_id = 1;
+    string nickname = 2;
+    string city = 3;
+    string owner = 4;
+}
+
+// Serwis dla drużyn
+service TeamService {
+    rpc GetTeams (TeamFilter) returns (repeated Team);
+    rpc AddTeam (TeamInput) returns (Team);
+    rpc UpdateTeam (TeamInput) returns (Team);
+    rpc DeleteTeam (string) returns (Team);
+} 

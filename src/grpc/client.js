@@ -1,10 +1,17 @@
-import * as grpc from "@grpc/grpc-js";
-import * as protoLoader from "@grpc/proto-loader";
+import grpc from 'grpc';
+import protoLoader from '@grpc/proto-loader';
 
-const packageDefination = protoLoader.loadSync('./proto/student.proto');
-const proto = grpc.loadPackageDefinition(packageDefination);
+const PROTO_PATH = __dirname + '/proto/nba.proto';
+const packageDefinition = protoLoader.loadSync(PROTO_PATH, {});
+const nbaProto = grpc.loadPackageDefinition(packageDefinition).nba;
 
-const client = new proto.school.StudentService("127.0.0.1:9000", grpc.ChannelCredentials.createInsecure(), (err) => console.log(err));
+const client = new nbaProto.PlayerService('localhost:50051', grpc.credentials.createInsecure());
 
-
-client.GetStudent(null, (err,res) => console.log(res));
+// Przykład wywołania metody GetPlayers
+client.GetPlayers({ player_name: 'John' }, (error, response) => {
+    if (!error) {
+        console.log('Players:', response);
+    } else {
+        console.error(error);
+    }
+});
