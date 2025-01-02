@@ -54,13 +54,25 @@ router.get('/players', async (req, res) => {
             const filteredPlayers = players.filter(player => player.TEAM_ID === teamId);
 
             if (filteredPlayers.length > 0) {
-                return res.status(200).json(filteredPlayers);
+                return res.status(200).json({
+                    players: filteredPlayers,
+                    _links: {
+                        self: { href: `http://localhost:3000/api/players?team_id=${teamId}`, method: 'GET' },
+                        allPlayers: { href: 'http://localhost:3000/api/players', method: 'GET' }
+                    }
+                });
             } else {
                 return res.status(404).send(`Nie znaleziono graczy w drużynie o TEAM_ID: ${teamId}`);
             }
         }
 
-        res.status(200).json(players);
+        res.status(200).json({
+            players,
+            _links: {
+                self: { href: 'http://localhost:3000/api/players', method: 'GET' },
+                addPlayer: { href: 'http://localhost:3000/api/players/add', method: 'POST' }
+            }
+        });
     } catch (error) {
         console.error('Błąd przy wczytywaniu danych z pliku CSV:', error);
         res.status(500).send('Błąd przy wczytywaniu danych z pliku CSV');

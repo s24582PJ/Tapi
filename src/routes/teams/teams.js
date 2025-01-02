@@ -70,7 +70,10 @@ router.get('/teams', async (req, res) => {
             _links: {
                 self: {href: 'http://localhost:3000/api/teams', method: 'GET'},
                 add: {href: 'http://localhost:3000/api/teams/add', method: 'POST'},
-                delete: {href: `http://localhost:3000/api/teams/delete/{id}`, method: 'DELETE'}
+                delete: {href: `http://localhost:3000/api/teams/delete/{id}`, method: 'DELETE'},
+                update: {href: `http://localhost:3000/api/teams/update/{id}`, method: 'PUT'},
+                allPlayers: {href: 'http://localhost:3000/api/players', method: 'GET'},
+                allGames: {href: 'http://localhost:3000/api/games', method: 'GET'}
             }
         });
     } catch (error) {

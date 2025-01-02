@@ -67,7 +67,13 @@ router.get('/games', async (req, res) => {
     try {
         const games = await loadGamesFromCSV();
         const limitedGames = games.slice(0, 20);
-        res.status(200).json(limitedGames);
+        res.status(200).json({
+            games: limitedGames,
+            _links: {
+                self: { href: 'http://localhost:3000/api/games', method: 'GET' },
+                addGame: { href: 'http://localhost:3000/api/games/add', method: 'POST' }
+            }
+        });
     } catch (error) {
         console.error('Błąd przy wczytywaniu danych z pliku CSV:', error);
         res.status(500).send('Błąd przy wczytywaniu danych z pliku CSV');
@@ -80,15 +86,10 @@ router.get('/games/:id', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     const gameId = req.params.id;
-    const homeTeamId = req.params.home; 
-    const awayTeamId = req.params.TEAM_ID_away; 
 
     try {
         const games = await loadGamesFromCSV();
         const game = games.find(g => g.GAME_ID === gameId);
-
-        const homeTeam = game.TEAM_ID_home;
-        const awayTeam = game.TEAM_ID_away; 
 
         if (!game) {
             return res.status(404).send('Mecz o podanym GAME_ID nie został znaleziony.');
@@ -101,8 +102,8 @@ router.get('/games/:id', async (req, res) => {
                 update: { href: `http://localhost:3000/api/games/update/${gameId}`, method: 'PATCH' },
                 delete: { href: `http://localhost:3000/api/games/delete/${gameId}`, method: 'DELETE' },
                 allGames: { href: 'http://localhost:3000/api/games', method: 'GET' },
-                HOME_TEAM_ID: { href: `http://localhost:3000/api/teams/${homeTeam}`, method: 'GET' },
-                TEAM_ID_away: { href: `http://localhost:3000/api/teams/${awayTeam}`, method: 'GET' }
+                HOME_TEAM_ID: { href: `http://localhost:3000/api/teams/${game.TEAM_ID_home}`, method: 'GET' },
+                TEAM_ID_away: { href: `http://localhost:3000/api/teams/${game.TEAM_ID_away}`, method: 'GET' }
             }
         });
     } catch (error) {
