@@ -1,10 +1,10 @@
 import { GraphQLObjectType, GraphQLString, GraphQLInt, GraphQLList, GraphQLInputObjectType } from 'graphql';
-import { loadGamesFromCSV, saveGamesToCSV } from '../routes/teams/games.js'; // Importuj funkcje do ładowania i zapisywania danych
+import { loadGamesFromCSV, saveGamesToCSV } from '../routes/teams/games.js'; 
 
 const GameType = new GraphQLObjectType({
     name: 'Game',
     fields: () => ({
-        GAME_DATE_EST: { type: GraphQLString },
+        GAME_DATE_EST: { type: Date },
         GAME_ID: { type: GraphQLString },
         GAME_STATUS_TEXT: { type: GraphQLString },
         HOME_TEAM_ID: { type: GraphQLString },
@@ -19,7 +19,7 @@ const GameType = new GraphQLObjectType({
 const GameInputType = new GraphQLInputObjectType({
     name: 'GameInput',
     fields: () => ({
-        GAME_DATE_EST: { type: GraphQLString },
+        GAME_DATE_EST: { type: Date },
         GAME_ID: { type: GraphQLString },
         GAME_STATUS_TEXT: { type: GraphQLString },
         HOME_TEAM_ID: { type: GraphQLString },
@@ -31,10 +31,62 @@ const GameInputType = new GraphQLInputObjectType({
 });
 
 
+const GameFilterType = new GraphQLInputObjectType({
+    name: 'GameFilter',
+    fields: () => ({
+        GAME_ID: { type: GraphQLString },
+        HOME_TEAM_ID: { type: GraphQLString },
+        VISITOR_TEAM_ID: { type: GraphQLString },
+    
+        SEASON: { type: GraphQLString }, 
+    })
+});
+
 const GameQuery = {
     type: new GraphQLList(GameType),
+    args: {
+        filter: { type: GameFilterType },
+        sort: { type: GraphQLString },
+        page: { type: GraphQLInt },
+        limit: { type: GraphQLInt }
+    },
     resolve(parent, args) {
-        return loadGamesFromCSV();
+        return loadGamesFromCSV().then(games => {
+            let filteredGames = games;
+
+            if (args.filter) {
+                if (args.filter.GAME_ID) {
+                    filteredGames = filteredGames.filter(game => game.GAME_ID === args.filter.GAME_ID);
+                }
+                if (args.filter.HOME_TEAM_ID) {
+                    filteredGames = filteredGames.filter(game => game.HOME_TEAM_ID === args.filter.HOME_TEAM_ID);
+                }
+                if (args.filter.VISITOR_TEAM_ID) {
+                    filteredGames = filteredGames.filter(game => game.VISITOR_TEAM_ID === args.filter.VISITOR_TEAM_ID);
+                }
+                if (args.filter.SEASON) {
+                    filteredGames = filteredGames.filter(game => game.SEASON === args.filter.SEASON);
+                }
+            }
+
+            if (args.sort) {
+                const [field, order] = args.sort.split(':');
+                filteredGames = filteredGames.sort((a, b) => {
+                    if (order === 'desc') {
+                        return a[field] < b[field] ? 1 : -1;
+                    }
+                    return a[field] > b[field] ? 1 : -1;
+                });
+            }
+
+            const page = args.page || 1;
+            const limit = args.limit || 10;
+            const startIndex = (page - 1) * limit;
+            const endIndex = startIndex + limit;
+            const paginatedGames = filteredGames.slice(startIndex, endIndex);
+
+            return paginatedGames;
+        });
     }
 };
 

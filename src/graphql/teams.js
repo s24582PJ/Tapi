@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInputObjectType } from 'graphql';
+import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInputObjectType, GraphQLInt } from 'graphql';
 import { loadTeamsFromCSV, saveTeamsToCSV } from '../routes/teams/teams.js'; 
 
 
@@ -26,10 +26,62 @@ const TeamInputType = new GraphQLInputObjectType({
 });
 
 
+const TeamFilterType = new GraphQLInputObjectType({
+    name: 'TeamFilter',
+    fields: () => ({
+        TEAM_ID: { type: GraphQLString },
+        NICKNAME: { type: GraphQLString },
+        CITY: { type: GraphQLString },
+        OWNER: { type: GraphQLString },
+    })
+});
+
+
 const TeamQuery = {
     type: new GraphQLList(TeamType),
+    args: {
+        filter: { type: TeamFilterType },
+        sort: { type: GraphQLString },
+        page: { type: GraphQLInt },
+        limit: { type: GraphQLInt }
+    },
     resolve(parent, args) {
-        return loadTeamsFromCSV();
+        return loadTeamsFromCSV().then(teams => {
+            let filteredTeams = teams;
+
+            if (args.filter) {
+                if (args.filter.TEAM_ID) {
+                    filteredTeams = filteredTeams.filter(team => team.TEAM_ID === args.filter.TEAM_ID);
+                }
+                if (args.filter.NICKNAME) {
+                    filteredTeams = filteredTeams.filter(team => team.NICKNAME.includes(args.filter.NICKNAME));
+                }
+                if (args.filter.CITY) {
+                    filteredTeams = filteredTeams.filter(team => team.CITY.includes(args.filter.CITY));
+                }
+                if (args.filter.OWNER) {
+                    filteredTeams = filteredTeams.filter(team => team.OWNER.includes(args.filter.OWNER));
+                }
+            }
+
+            if (args.sort) {
+                const [field, order] = args.sort.split(':');
+                filteredTeams = filteredTeams.sort((a, b) => {
+                    if (order === 'desc') {
+                        return a[field] < b[field] ? 1 : -1;
+                    }
+                    return a[field] > b[field] ? 1 : -1;
+                });
+            }
+
+            const page = args.page || 1;
+            const limit = args.limit || 10;
+            const startIndex = (page - 1) * limit;
+            const endIndex = startIndex + limit;
+            const paginatedTeams = filteredTeams.slice(startIndex, endIndex);
+
+            return paginatedTeams;
+        });
     }
 };
 

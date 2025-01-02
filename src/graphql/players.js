@@ -1,5 +1,5 @@
-import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInputObjectType } from 'graphql';
-import { loadPlayersFromCSV, savePlayersToCSV } from '../routes/teams/players.js'; // Importuj funkcje do ładowania i zapisywania danych
+import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLInputObjectType, GraphQLInt } from 'graphql';
+import { loadPlayersFromCSV, savePlayersToCSV } from '../routes/teams/players.js'; 
 
 
 const PlayerType = new GraphQLObjectType({
@@ -29,14 +29,20 @@ const PlayerFilterType = new GraphQLInputObjectType({
     fields: () => ({
         PLAYER_NAME: { type: GraphQLString },
         TEAM_ID: { type: GraphQLString },
-        SEASON: { type: GraphQLString }
+        SEASON: { type: GraphQLString },
+        PLAYER_ID: { type: GraphQLString },
     })
 });
 
 
 const PlayerQuery = {
     type: new GraphQLList(PlayerType),
-    args: { filter: { type: PlayerFilterType } },
+    args: {
+        filter: { type: PlayerFilterType },
+        sort: { type: GraphQLString },
+        page: { type: GraphQLInt },
+        limit: { type: GraphQLInt }
+    },
     resolve(parent, args) {
         return loadPlayersFromCSV().then(players => {
             let filteredPlayers = players;
@@ -51,9 +57,28 @@ const PlayerQuery = {
                 if (args.filter.SEASON) {
                     filteredPlayers = filteredPlayers.filter(player => player.SEASON === args.filter.SEASON);
                 }
+                if (args.filter.PLAYER_ID) {
+                    filteredPlayers = filteredPlayers.filter(player => player.PLAYER_ID === args.filter.PLAYER_ID);
+                }
             }
 
-            return filteredPlayers;
+            if (args.sort) {
+                const [field, order] = args.sort.split(':');
+                filteredPlayers = filteredPlayers.sort((a, b) => {
+                    if (order === 'desc') {
+                        return a[field] < b[field] ? 1 : -1;
+                    }
+                    return a[field] > b[field] ? 1 : -1;
+                });
+            }
+
+            const page = args.page || 1;
+            const limit = args.limit || 10;
+            const startIndex = (page - 1) * limit;
+            const endIndex = startIndex + limit;
+            const paginatedPlayers = filteredPlayers.slice(startIndex, endIndex);
+
+            return paginatedPlayers;
         });
     }
 };
