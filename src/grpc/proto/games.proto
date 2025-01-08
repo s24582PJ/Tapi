@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package nba;
+
+// Typy dla gier
+message Game {
+    string game_date_est = 1;
+    string game_id = 2;
+    string game_status_text = 3;
+    string home_team_id = 4;
+    string visitor_team_id = 5;
+    string season = 6;
+    int32 pts_home = 7;
+    int32 pts_away = 8;
+}
+
+message GameInput {
+    string game_date_est = 1;
+    string game_id = 2;
+    string game_status_text = 3;
+    string home_team_id = 4;
+    string visitor_team_id = 5;
+    string season = 6;
+    int32 pts_home = 7;
+    int32 pts_away = 8;
+}
+
+message GameFilter {
+    string game_id = 1;
+    string home_team_id = 2;
+    string visitor_team_id = 3;
+    string season = 4;
+}
+
+// Serwis dla gier
+service GameService {
+    rpc GetGames (GameFilter) returns (repeated Game);
+    rpc AddGame (GameInput) returns (Game);
+    rpc UpdateGame (GameInput) returns (Game);
+    rpc DeleteGame (string) returns (Game);
+} 
