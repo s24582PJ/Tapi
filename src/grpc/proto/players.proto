@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package nba;
+
+// Typy dla graczy
+message Player {
+    string player_name = 1;
+    string team_id = 2;
+    string player_id = 3;
+    string season = 4;
+}
+
+message PlayerInput {
+    string player_name = 1;
+    string team_id = 2;
+    string player_id = 3;
+    string season = 4;
+}
+
+message PlayerFilter {
+    string player_name = 1;
+    string team_id = 2;
+    string season = 3;
+    string player_id = 4;
+}
+
+// Serwis dla graczy
+service PlayerService {
+    rpc GetPlayers (PlayerFilter) returns (repeated Player);
+    rpc AddPlayer (PlayerInput) returns (Player);
+    rpc UpdatePlayer (PlayerInput) returns (Player);
+    rpc DeletePlayer (string) returns (Player);
+} 
