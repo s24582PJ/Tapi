@@ -1,7 +1,6 @@
 import express from "express";
 import cors from 'cors';
-import { graphqlHTTP } from 'express-graphql';
-import schema from './graphql/schema.js'; 
+
 
 import teamRoutes from "./routes/teams/teams.js";
 import players from "./routes/teams/players.js";
@@ -24,10 +23,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/graphql', graphqlHTTP({
-    schema: schema,
-    graphiql: true 
-}));
+
 
 app.use('/api/', teamRoutes, players, games);
 
