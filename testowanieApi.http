@@ -181,3 +181,30 @@ Content-Type: application/json
 DELETE {{baseUrl}}/games/delete/22200500
 Content-Type: application/json
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~ GRPC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Pobranie wszystkich drużyn
+GET http://localhost:000/api/teams
+
+### Pobranie drużyny po ID
+GET http://localhost:3000/api/teams/1610612737
+
+### Dodanie nowej drużyny
+POST http://localhost:3000/api/teams/add
+Content-Type: application/json
+
+{
+    "TEAM_ID": "1610612737",
+    "NICKNAME": "Hawks",
+    "CITY": "Atlanta",
+    "ARENA": "State Farm Arena",
+    "OWNER": "Tony Ressler"
+}
+
+### Aktualizacja drużyny
+PATCH http://localhost:3000/api/teams/1610612737
+Content-Type: application/json
+
+{
+    "ARENA": "New Arena",
+    "HEADCOACH": "Lloyd Pierce Test"
+}

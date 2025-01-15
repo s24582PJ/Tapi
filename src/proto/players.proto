@@ -26,8 +26,8 @@ message PlayerFilter {
 
 // Serwis dla graczy
 service PlayerService {
-    rpc GetPlayers (PlayerFilter) returns (repeated Player);
-    rpc AddPlayer (PlayerInput) returns (Player);
-    rpc UpdatePlayer (PlayerInput) returns (Player);
-    rpc DeletePlayer (string) returns (Player);
+    rpc GetPlayers(PlayerFilter) returns (Player);
+    rpc AddPlayer(PlayerInput) returns (Player);
+    rpc UpdatePlayer(PlayerInput) returns (Player);
+    rpc DeletePlayer(PlayerFilter) returns (Player);
 } 

@@ -34,8 +34,8 @@ message GameFilter {
 
 // Serwis dla gier
 service GameService {
-    rpc GetGames (GameFilter) returns (repeated Game);
-    rpc AddGame (GameInput) returns (Game);
-    rpc UpdateGame (GameInput) returns (Game);
-    rpc DeleteGame (string) returns (Game);
+    rpc GetGames(GameFilter) returns (Game);
+    rpc AddGame(GameInput) returns (Game);
+    rpc UpdateGame(GameInput) returns (Game);
+    rpc DeleteGame(GameFilter) returns (Game);
 } 

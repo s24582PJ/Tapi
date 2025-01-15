@@ -28,8 +28,8 @@ message TeamFilter {
 
 // Serwis dla drużyn
 service TeamService {
-    rpc GetTeams (TeamFilter) returns (repeated Team);
-    rpc AddTeam (TeamInput) returns (Team);
-    rpc UpdateTeam (TeamInput) returns (Team);
-    rpc DeleteTeam (string) returns (Team);
+    rpc GetTeams(TeamFilter) returns (Team);
+    rpc AddTeam(TeamInput) returns (Team);
+    rpc UpdateTeam(TeamInput) returns (Team);
+    rpc DeleteTeam(TeamFilter) returns (Team);
 } 
