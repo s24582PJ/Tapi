@@ -23,22 +23,19 @@ export const applyFilters = (item, filter) => {
     return true;
 };
 
+// Proste sprawdzenie czy ID nie jest puste
 export const validateTeamId = (teamId) => {
-    // ID drużyny powinno być 10-cyfrowe
-    return /^\d{10}$/.test(teamId);
+    return teamId && teamId.length > 0;
 };
 
 export const validatePlayerId = (playerId) => {
-    // ID gracza powinno być 10-cyfrowe
-    return /^\d{10}$/.test(playerId);
+    return playerId && playerId.length > 0;
 };
 
 export const validateGameId = (gameId) => {
-    // ID meczu powinno być 8-cyfrowe
-    return /^\d{8}$/.test(gameId);
+    return gameId && gameId.length > 0;
 };
 
 export const validateSeason = (season) => {
-    // Sezon powinien być 4-cyfrowy
-    return /^\d{4}$/.test(season);
+    return season && season.length > 0;
 };
