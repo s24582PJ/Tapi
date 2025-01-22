@@ -1,7 +1,9 @@
 import data from "../../dane/dane.json" assert { type: 'json' };
 import { applyFilters, validateTeamId, validatePlayerId, validateGameId } from "./helpers.js";
+import { PositiveInt } from './scalars.js';
 
 export const resolvers = {
+    PositiveInt,
     Query: {
         teams: (_, { filter, sort, page }) => {
             let result = data.teams;

@@ -1,7 +1,9 @@
 export const typeDefs = `#graphql
+    scalar PositiveInt
+
     type Team {
         LEAGUE_ID: String
-        TEAM_ID: String
+        TEAM_ID: PositiveInt
         MIN_YEAR: String
         MAX_YEAR: String
         ABBREVIATION: String
